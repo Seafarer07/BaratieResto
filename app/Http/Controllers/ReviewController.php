@@ -117,11 +117,15 @@ class ReviewController extends Controller
     {
         $review = Review::findOrFail($id);
 
-        if ($review->id_user !== Auth::id()) {
+        if (!Auth::user()->is_admin && $review->id_user !== Auth::id()) {
             abort(403, 'Unauthorized action.');
         }
 
         $review->delete();
+
+        if (Auth::user()->is_admin) {
+            return redirect()->route('review.index')->with('success', 'Review deleted.');
+        }
 
         return redirect()->route('web.review')->with('success', 'Review berhasil dihapus!');
     }

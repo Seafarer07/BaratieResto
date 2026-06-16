@@ -6,6 +6,7 @@ use App\Models\Reservasi;
 use App\Models\Meja;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ReservasiController extends Controller
 {
@@ -45,9 +46,6 @@ class ReservasiController extends Controller
         ]);
 
         // Cek ketersediaan meja
-        // $mejaTersedia = Meja::where('jenis', $request->input('jenis'))
-        //     ->where('status', false)
-        //     ->first();
         $jenisMeja = $request->input('jenis');
         $mejaTersedia = Meja::where('jenis', $jenisMeja)
             ->where('status', false)
@@ -58,16 +56,17 @@ class ReservasiController extends Controller
             return back()->withErrors(['jenis' => 'Maaf, tidak ada meja tersedia untuk jenis yang dipilih.'])->withInput();
         }
 
-        // Simpan data reservasi
-        Reservasi::create([
-            'id_meja' => $mejaTersedia->id,
-            'id_user' => Auth::id(), // Menggunakan ID pengguna yang sedang login
-            'tanggal_reservasi' => $request->input('tanggal_reservasi'),
-            'note' => $request->input('note'),
-        ]);
+        // Simpan reservasi + lock meja dalam satu transaksi atomik
+        DB::transaction(function () use ($mejaTersedia, $request) {
+            Reservasi::create([
+                'id_meja'           => $mejaTersedia->id,
+                'id_user'           => Auth::id(),
+                'tanggal_reservasi' => $request->input('tanggal_reservasi'),
+                'note'              => $request->input('note'),
+            ]);
 
-        // Update status meja menjadi tidak tersedia
-        $mejaTersedia->update(['status' => true]);
+            $mejaTersedia->update(['status' => true]);
+        });
 
         return redirect()->route('web.home')->with('success', 'Reservasi berhasil dibuat.');
     }
@@ -102,7 +101,7 @@ class ReservasiController extends Controller
         ]);
 
         $reservasi->update($validatedData);
-        return redirect()->route('admin.reservasi.index')->with('success', 'Reservasi berhasil diperbarui.');
+        return redirect()->route('reservasi.index')->with('success', 'Reservasi berhasil diperbarui.');
     }
 
     /**

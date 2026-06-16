@@ -1,146 +1,86 @@
 @extends('admin.sidebar')
+@section('title', 'Reviews')
+@section('page-title', 'Manage <span>Reviews</span>')
 @section('content')
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>review - Baratie Resto</title>
-
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=Playfair+Display:400,600&display=swap" rel="stylesheet" />
-
-    <!-- AOS Animation Library -->
-    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.1/dist/aos.js"></script>
-</head>
-
-<style>
-    body {
-        background-color: #1a1a1a;
-        font-family: 'Playfair Display', serif;
-        color: #eaeaea;
-        margin: 0;
-        padding: 0;
-    }
-
-    h1,
-    h5 {
-        color: #d4af37;
-    }
-
-    table {
-        background-color: #2a2a2a;
-        color: #eaeaea;
-        border-radius: 10px;
-        overflow: hidden;
-    }
-
-    thead {
-        background-color: #d4af37;
-        color: #1a1a1a;
-    }
-
-    th,
-    td {
-        text-align: center;
-        vertical-align: middle;
-    }
-
-    .btn-outline-light {
-        border-color: #d4af37;
-        color: #d4af37;
-        transition: all 0.3s ease;
-    }
-
-    .btn-outline-light:hover {
-        background-color: #d4af37;
-        color: #1a1a1a;
-    }
-
-    .btn-light {
-        background-color: #d4af37;
-        color: whitesmoke;
-        transition: all 0.3s ease;
-    }
-
-    .btn-light:hover {
-        border-color: #d4af37;
-        background-color: whitesmoke;
-        color: #1a1a1a;
-    }
-
-    .pagination .page-link {
-        color: #d4af37;
-        background-color: #2a2a2a;
-        border: 1px solid #d4af37;
-        margin: 0 5px;
-        border-radius: 8px;
-        padding: 8px 16px;
-        font-weight: bold;
-    }
-
-    .pagination .page-link:hover {
-        background-color: #d4af37;
-        color: #1a1a1a;
-        border-color: #d4af37;
-    }
-
-    .pagination .active .page-link {
-        background-color: #d4af37;
-        color: #1a1a1a;
-        border-color: #d4af37;
-    }
-
-    .pagination-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-top: 20px;
-    }
-</style>
-
-<div class="container text-left my-5" data-aos="fade-up">
-    <h1 class="mb-3 ml-3">Kelola review</h1>
-
-    <!-- <div class="text-start mb-3">
-        <a href="{{ route('review.create') }}" class="btn btn-outline-light">Tambah review</a>
-    </div> -->
-
-    <!-- review Table -->
-    <div class="table-responsive" data-aos="fade-up">
-
-        <!-- Reviews List -->
-        <div class="reviews-container ml-3">
-            @forelse ($reviews as $review)
-                <div class="card-review" data-aos="fade-up">
-                    <p><b>Id User : </b> {{ $review->id_user }}</p>
-                    <p><b>Id Menu : </b> {{ $review->id_menu }}</p>
-                    <div class="star-rating">
-                        @for ($i = 1; $i <= $review->rating; $i++)
-                            <label>&#9733;</label>
-                        @endfor
-                    </div>
-                    <p>{{ $review->note }}</p>
-                    <p>_______________________________________________________________</p>
-                </div>
-            @empty
-            @endforelse
-            <div class="pagination-container">
-                {{ $reviews->links('pagination::bootstrap-5') }}
-            </div>
-        </div>
-
+<div class="page-heading">
+    <div>
+        <h2>Reviews</h2>
+        <div class="breadcrumb-bar">Admin / Reviews</div>
     </div>
+    <span style="color:#666;font-size:.82rem;">{{ $reviews->total() }} reviews total</span>
 </div>
 
-<script>
-    AOS.init();
-</script>
+<div class="a-card">
+    <div class="a-card-header">
+        <h5>All Customer Reviews</h5>
+    </div>
+    <div style="overflow-x:auto;">
+        <table class="a-table">
+            <thead>
+                <tr>
+                    <th>Guest</th>
+                    <th>Menu</th>
+                    <th>Rating</th>
+                    <th>Comment</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($reviews as $review)
+                <tr>
+                    <td>
+                        <div style="display:flex;align-items:center;gap:10px;">
+                            <img src="{{ asset(optional($review->user)->gambar ?? 'public/images/default.jpg') }}"
+                                 class="td-avatar" alt="avatar">
+                            <span style="color:#eaeaea;">{{ optional($review->user)->nama_pelanggan ?? '—' }}</span>
+                        </div>
+                    </td>
+                    <td>
+                        @if($review->menu)
+                            <span class="badge-gold">{{ $review->menu->nama_menu }}</span>
+                        @else
+                            <span style="color:#555;">—</span>
+                        @endif
+                    </td>
+                    <td>
+                        <div style="display:flex;gap:2px;align-items:center;">
+                            @for($i = 1; $i <= 5; $i++)
+                                <i class="fa-solid fa-star" style="font-size:.75rem;color:{{ $i <= $review->rating ? '#d4af37' : '#333' }};"></i>
+                            @endfor
+                            <span style="color:#888;font-size:.78rem;margin-left:4px;">{{ $review->rating }}/5</span>
+                        </div>
+                    </td>
+                    <td style="color:#aaa;font-size:.85rem;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+                        {{ $review->note ?: '—' }}
+                    </td>
+                    <td style="color:#666;font-size:.8rem;white-space:nowrap;">
+                        {{ $review->created_at->format('d M Y') }}
+                    </td>
+                    <td>
+                        <form action="{{ route('review.destroy', $review->id) }}" method="POST"
+                              onsubmit="return confirm('Delete this review?')" style="margin:0">
+                            @csrf @method('DELETE')
+                            <button type="submit" class="btn-danger-sm">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="6" style="text-align:center;color:#555;padding:32px;">No reviews yet</td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+    @if($reviews->hasPages())
+    <div style="padding:16px 22px;border-top:1px solid var(--border);">
+        {{ $reviews->links('pagination::bootstrap-5') }}
+    </div>
+    @endif
+</div>
+
 @endsection

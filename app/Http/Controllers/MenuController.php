@@ -7,12 +7,9 @@ use Illuminate\Http\Request;
 
 class MenuController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $menu = Menu::latest()->paginate(5); // Mengambil semua data menu
+        $menu = Menu::latest()->paginate(5);
         return view('admin.menu.index', compact('menu'));
     }
 
@@ -21,107 +18,79 @@ class MenuController extends Controller
         return view('admin.menu.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $validatedData = $request->validate([
             'nama_menu' => 'required|string|max:255',
-            'kategori' => 'required|string|max:255',
-            'harga' => 'required|numeric|min:0',
-            'image' => 'required|image|max:5000',
+            'kategori'  => 'required|string|max:255',
+            'harga'     => 'required|numeric|min:0',
+            'image'     => 'required|image|max:5000',
         ]);
 
         if ($request->hasFile('image')) {
-            $image = $request->file('image');
+            $image    = $request->file('image');
             $fileName = time() . '_' . $image->getClientOriginalName();
             $image->move(public_path('public/images/'), $fileName);
             $validatedData['image'] = 'public/images/' . $fileName;
         }
 
-        $menu = Menu::create($validatedData); // Membuat menu baru
+        Menu::create($validatedData);
 
-        try {
-            $menu = Menu::latest()->paginate(5); // Mengambil semua data menu
-            return view('admin.menu.index', compact('menu'));
-        } catch (\Exception $e) {
-            $menu = Menu::latest()->paginate(5); // Mengambil semua data menu
-            return view('admin.menu.index', compact('menu'));
-        }
+        return redirect()->route('menu.index')->with('success', 'Menu berhasil ditambahkan!');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Menu $menu)
     {
-        return response()->json($menu); // Mengembalikan data menu berdasarkan ID
+        return response()->json($menu);
     }
 
-
-
-    /**
-     * Update the specified resource in storage.
-     */
-
-     public function edit($id)
-     {
-         $menu = Menu::find($id);
-         return view('admin.menu.edit', compact('menu'));
-     }
+    public function edit($id)
+    {
+        $menu = Menu::findOrFail($id);
+        return view('admin.menu.edit', compact('menu'));
+    }
 
     public function update(Request $request, $id)
     {
-
-        $menu = Menu::find($id);
+        $menu = Menu::findOrFail($id);
 
         $validatedData = $request->validate([
             'nama_menu' => 'sometimes|required|string|max:255',
-            'kategori' => 'sometimes|required|string|max:255',
-            'harga' => 'sometimes|required|numeric|min:0',
-            'image' => 'sometimes|required|image|max:5000',
+            'kategori'  => 'sometimes|required|string|max:255',
+            'harga'     => 'sometimes|required|numeric|min:0',
+            'image'     => 'sometimes|required|image|max:5000',
         ]);
 
         if ($request->hasFile('image')) {
-            $image = $request->file('image');
+            // Hapus gambar lama jika ada
+            if ($menu->image && file_exists(public_path($menu->image))) {
+                unlink(public_path($menu->image));
+            }
+
+            $image    = $request->file('image');
             $fileName = time() . '_' . $image->getClientOriginalName();
             $image->move(public_path('public/images/'), $fileName);
             $validatedData['image'] = 'public/images/' . $fileName;
         }
 
-        $menu->update($validatedData); // Membuat menu baru
+        $menu->update($validatedData);
 
-        try {
-            $menu = Menu::latest()->paginate(5); // Mengambil semua data menu
-            return view('admin.menu.index', compact('menu'));
-        } catch (\Exception $e) {
-            $menu = Menu::latest()->paginate(5); // Mengambil semua data menu
-            return view('admin.menu.index', compact('menu'));
-        }
+        return redirect()->route('menu.index')->with('success', 'Menu berhasil diperbarui!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Menu $menu)
     {
-        $menu->delete(); // Menghapus menu
-        try {
-            $menu = Menu::latest()->paginate(5); // Mengambil semua data menu
-            return view('admin.menu.index', compact('menu'));
-        } catch (\Exception $e) {
-            $menu = Menu::latest()->paginate(5); // Mengambil semua data menu
-            return view('admin.menu.index', compact('menu'));
+        if ($menu->image && file_exists(public_path($menu->image))) {
+            unlink(public_path($menu->image));
         }
+
+        $menu->delete();
+
+        return redirect()->route('menu.index')->with('success', 'Menu berhasil dihapus!');
     }
 
-    /**
-     * Display reviews for the specified menu.
-     */
     public function getReviews(Menu $menu)
     {
-        $reviews = $menu->review; // Mengambil data review yang terkait
-        return response()->json($reviews);
+        return response()->json($menu->review);
     }
 }

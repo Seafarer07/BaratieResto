@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
@@ -47,13 +48,14 @@ class ProfileController extends Controller
 
         // Update password hanya jika diisi
         if ($request->filled('password')) {
-            $validatedData['password'] = bcrypt($request->password);
+            $validatedData['password'] = Hash::make($request->password);
         } else {
             unset($validatedData['password']);
         }
 
         // Update data user
         $user->update($validatedData);
-        return view('web/profile');
+
+        return redirect()->route('profile')->with('success', 'Profil berhasil diperbarui!');
     }
 }

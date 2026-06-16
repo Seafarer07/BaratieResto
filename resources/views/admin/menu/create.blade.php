@@ -1,161 +1,93 @@
 @extends('admin.sidebar')
+@section('title', 'Add Menu')
+@section('page-title', 'Add <span>Menu Item</span>')
 @section('content')
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Menu - Baratie Resto</title>
-
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=Playfair+Display:400,600&display=swap" rel="stylesheet" />
-
-    <!-- AOS Animation Library -->
-    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.1/dist/aos.js"></script>
-</head>
-
-<style>
-    body {
-        background-color: #1a1a1a;
-        font-family: 'Playfair Display', serif;
-        color: #eaeaea;
-        margin: 0;
-        padding: 0;
-    }
-
-    h5 {
-        color: #1a1a1a;
-    }
-
-    .card {
-        background-color: #1a1a1a;
-        border: 1px solid #d4af37;
-        color: #eaeaea;
-        border-radius: 10px;
-        overflow: hidden;
-    }
-
-    .card-header {
-        background-color: #d4af37;
-        color: #1a1a1a;
-        font-weight: bold;
-    }
-
-    .btn-success {
-        background-color: #d4af37;
-        border-color: #d4af37;
-        color: #1a1a1a;
-        transition: all 0.3s ease;
-    }
-
-    .btn-success:hover {
-        background-color: #b89e2f;
-        border-color: #b89e2f;
-    }
-
-    label {
-        font-weight: bold;
-    }
-
-    .form-control {
-        background-color: #333;
-        color: #eaeaea;
-        border: 1px solid #555;
-    }
-
-    .form-control::placeholder {
-        color: #999;
-    }
-
-    .form-control:focus {
-        border-color: #d4af37;
-        box-shadow: 0 0 5px #d4af37;
-    }
-
-    .invalid-feedback {
-        color: #ff4d4d;
-    }
-
-    .text-judul{
-        color: #d4af37;
-        font-size: 4rem;
-    }
-</style>
-
-<div class="container my-5" data-aos="fade-up">
-    <div class="content-header">
-        <div class="row mb-3">
-            <div class="col-sm-6">
-                <h1 class="text-judul">Tambah Menu</h1>
-            </div>
+<div class="page-heading">
+    <div>
+        <h2>Add Menu Item</h2>
+        <div class="breadcrumb-bar">
+            <a href="{{ route('menu.index') }}">Menu</a> / Add New
         </div>
     </div>
+    <a href="{{ route('menu.index') }}" class="btn-outline-gold">
+        <i class="fa-solid fa-arrow-left"></i> Back
+    </a>
+</div>
 
-    <div class="card">
-        <div class="card-header text-center">
-            <h5>Form Tambah Menu</h5>
-        </div>
-        <div class="card-body">
-            <form action="{{ route('menu.store') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div class="row">
-                    <div class="form-group col-md-6 mb-3">
-                        <label for="upload" class="form-label">Upload Gambar</label>
-                        <input type="file" class="form-control @error('image') is-invalid @enderror" id="upload" name="image">
-                        @error('image')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="form-group col-md-6 mb-3">
-                        <label for="nama_menu" class="form-label">Nama Menu</label>
-                        <input type="text" class="form-control @error('nama_menu') is-invalid @enderror" id="nama_menu" name="nama_menu" placeholder="Masukkan Nama Menu">
-                        @error('nama_menu')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-md-6 mb-3">
-                        <label for="jenis" class="form-label">Jenis</label>
-                        <select class="form-control @error('jenis') is-invalid @enderror" id="jenis" name="jenis">
-                            <option value="" selected disabled>Pilih kategori Menu</option>
-                            <option value="Appetizer">Appetizer</option>
-                            <option value="Main Course">Main Course</option>
-                            <option value="Dessert">Dessert</option>
-                            <option value="Drink">Drink</option>
-                        </select>
-                        @error('jenis')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
+@if($errors->any())
+    <div class="a-alert a-alert-danger mb-3">
+        <ul class="mb-0 ps-3">
+            @foreach($errors->all() as $e)<li>{{ $e }}</li>@endforeach
+        </ul>
+    </div>
+@endif
 
-                    <div class="form-group col-md-6 mb-3">
-                        <label for="harga" class="form-label">Harga</label>
-                        <input type="number" class="form-control @error('harga') is-invalid @enderror" id="harga" name="harga" placeholder="Masukkan Harga">
-                        @error('harga')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
+<div class="a-card" style="max-width:720px;">
+    <div class="a-card-header">
+        <h5>Menu Details</h5>
+    </div>
+    <div class="a-card-body">
+        <form action="{{ route('menu.store') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+
+            <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                    <label class="f-label">Menu Photo</label>
+                    <input type="file" class="f-control" name="image" accept="image/*" id="imgInput"
+                           onchange="previewImg(event)">
+                    @error('image')<p style="color:#e07070;font-size:.78rem;margin-top:4px;">{{ $message }}</p>@enderror
+                    <img id="imgPreview" src="" alt="" style="display:none;margin-top:10px;width:100px;height:100px;object-fit:cover;border-radius:8px;border:1px solid rgba(212,175,55,.3);">
                 </div>
-                <div class="d-flex justify-content-end">
-                    <button type="submit" class="btn btn-success">
-                        <i class="fa-solid fa-floppy-disk"></i> Simpan
-                    </button>
+                <div class="col-md-6">
+                    <label class="f-label">Menu Name <span style="color:#d4af37">*</span></label>
+                    <input type="text" class="f-control" name="nama_menu"
+                           value="{{ old('nama_menu') }}" placeholder="e.g. Beef Rendang" required>
+                    @error('nama_menu')<p style="color:#e07070;font-size:.78rem;margin-top:4px;">{{ $message }}</p>@enderror
                 </div>
-            </form>
-        </div>
+            </div>
+
+            <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                    <label class="f-label">Category <span style="color:#d4af37">*</span></label>
+                    <select class="f-control" name="jenis" required>
+                        <option value="" disabled {{ old('jenis') ? '' : 'selected' }}>— Choose category —</option>
+                        @foreach(['Appetizer','Main Course','Dessert','Drink'] as $cat)
+                            <option value="{{ $cat }}" {{ old('jenis') == $cat ? 'selected' : '' }}>{{ $cat }}</option>
+                        @endforeach
+                    </select>
+                    @error('jenis')<p style="color:#e07070;font-size:.78rem;margin-top:4px;">{{ $message }}</p>@enderror
+                </div>
+                <div class="col-md-6">
+                    <label class="f-label">Price (Rp) <span style="color:#d4af37">*</span></label>
+                    <input type="number" class="f-control" name="harga"
+                           value="{{ old('harga') }}" placeholder="e.g. 75000" min="0" required>
+                    @error('harga')<p style="color:#e07070;font-size:.78rem;margin-top:4px;">{{ $message }}</p>@enderror
+                </div>
+            </div>
+
+            <div class="d-flex gap-3 justify-content-end">
+                <a href="{{ route('menu.index') }}" class="btn-outline-gold">Cancel</a>
+                <button type="submit" class="btn-gold">
+                    <i class="fa-solid fa-floppy-disk"></i> Save Menu Item
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 
 <script>
-    AOS.init();
+function previewImg(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+        const img = document.getElementById('imgPreview');
+        img.src = ev.target.result;
+        img.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+}
 </script>
 
 @endsection

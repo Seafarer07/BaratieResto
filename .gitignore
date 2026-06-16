@@ -1,23 +1,104 @@
+# ==============================
+# Laravel
+# ==============================
 /.phpunit.cache
+/bootstrap/cache/*
+!/bootstrap/cache/.gitignore
 /node_modules
 /public/build
 /public/hot
 /public/storage
 /storage/*.key
 /storage/pail
+/storage/logs/*
+!/storage/logs/.gitignore
+/storage/framework/cache/data/*
+!/storage/framework/cache/data/.gitignore
+/storage/framework/sessions/*
+!/storage/framework/sessions/.gitignore
+/storage/framework/views/*
+!/storage/framework/views/.gitignore
+/storage/framework/testing/*
+!/storage/framework/testing/.gitignore
+/storage/app/public/*
+!/storage/app/public/.gitignore
 /vendor
+
+# ==============================
+# Environment & Secrets
+# ==============================
 .env
-.env.backup
-.env.production
-.phpactor.json
+.env.*
+!.env.example
+auth.json
+
+# ==============================
+# User Uploaded Files
+# ==============================
+/public/public/
+/public/uploads/
+/public/images/uploads/
+
+# ==============================
+# Database
+# ==============================
+/database/*.sqlite
+/database/*.sqlite-shm
+/database/*.sqlite-wal
+*.sqlite
+*.sqlite3
+
+# ==============================
+# Testing
+# ==============================
 .phpunit.result.cache
+/.phpunit.result.cache
+/coverage
+
+# ==============================
+# IDE & Editors
+# ==============================
+/.idea
+/.vscode
+/.fleet
+/.nova
+/.zed
+/.phpactor.json
+*.swp
+*.swo
+*~
+
+# ==============================
+# OS Generated
+# ==============================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ==============================
+# Logs & Debug
+# ==============================
+npm-debug.log
+npm-debug.log.*
+yarn-error.log
+yarn-error.log.*
+*.log
+
+# ==============================
+# Build / Package Artifacts
+# ==============================
+/public/mix-manifest.json
+/public/js/app.js
+/public/css/app.css
+
+# ==============================
+# Homestead / Vagrant
+# ==============================
 Homestead.json
 Homestead.yaml
-auth.json
-npm-debug.log
-yarn-error.log
-/.fleet
-/.idea
-/.nova
-/.vscode
-/.zed
+.vagrant

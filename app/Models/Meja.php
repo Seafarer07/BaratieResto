@@ -18,6 +18,6 @@ class Meja extends Model
 
     public function reservasi()
     {
-        return $this->belongsTo(Reservasi::class, 'id_meja', 'id');
+        return $this->hasMany(Reservasi::class, 'id_meja', 'id');
     }
 }

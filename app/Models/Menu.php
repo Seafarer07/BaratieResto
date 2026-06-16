@@ -20,6 +20,6 @@ class Menu extends Model
 
     public function review()
     {
-        return $this->belongsTo(Review::class, 'id_menu', 'id');
+        return $this->hasMany(Review::class, 'id_menu', 'id');
     }
 }

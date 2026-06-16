@@ -21,11 +21,11 @@ class Reservasi extends Model
 
     public function meja()
     {
-        return $this->belongsTo(Meja::class, 'id', 'id_meja');
+        return $this->belongsTo(Meja::class, 'id_meja', 'id');
     }
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'id', 'id_user');
+        return $this->belongsTo(User::class, 'id_user', 'id');
     }
 }

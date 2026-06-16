@@ -1,275 +1,294 @@
 @extends('web.layout.nav')
-
+@section('title', 'About — Baratie Resto')
 @section('content')
 
-<head>
-    <title>About - Baratie Resto</title>
+<link href="https://cdn.jsdelivr.net/npm/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<link href="https://fonts.bunny.net/css?family=Playfair+Display:400,600,700i&display=swap" rel="stylesheet">
 
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<style>
+    body { background-color: #1a1a1a; font-family: 'Playfair Display', serif; color: #eaeaea; }
 
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    /* ── Shared ── */
+    .eyebrow {
+        letter-spacing: .35em; font-size: .78rem; color: #d4af37;
+        text-transform: uppercase; margin-bottom: 10px;
+    }
+    .gold-divider {
+        display: flex; align-items: center; justify-content: center; gap: 12px;
+        margin: 14px auto 0;
+    }
+    .gold-divider span { display: block; height: 1px; width: 80px; background: #d4af37; opacity: .5; }
+    .gold-divider i    { color: #d4af37; font-size: .7rem; }
 
-    <!-- Fonts -->
-    <link href="https://fonts.bunny.net/css?family=Playfair+Display:400,600&display=swap" rel="stylesheet" />
+    /* ── Page Header ── */
+    .page-header { text-align: center; padding: 60px 0 50px; }
+    .page-header h1 { font-size: 2.8rem; font-weight: 700; color: #fff; margin-bottom: 14px; }
+    .page-header .lead { color: #888; font-size: .95rem; max-width: 580px; margin: 10px auto 0; line-height: 1.7; }
 
-    <style>
-        body {
-            background-color: #1a1a1a;
-            font-family: 'Playfair Display', serif;
-            color: #eaeaea;
-            margin: 0;
-            padding: 0;
-        }
+    /* ── Story Section ── */
+    .story-grid {
+        display: grid;
+        grid-template-columns: 1.1fr 1fr;
+        gap: 48px;
+        align-items: center;
+        padding: 20px 0 60px;
+    }
+    @media (max-width: 767px) { .story-grid { grid-template-columns: 1fr; } }
 
-        h1 {
-            color: #d4af37;
-            margin-bottom: 30px;
-            opacity: 0;
-            transform: translateY(-20px);
-            animation: fadeInUp 0.5s forwards;
-        }
+    .story-img-wrap {
+        position: relative;
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid rgba(212,175,55,.2);
+    }
+    .story-img-wrap img { width: 100%; height: 420px; object-fit: cover; display: block; }
+    .story-img-wrap::after {
+        content: '';
+        position: absolute; inset: 0;
+        background: linear-gradient(to top, rgba(26,26,26,.6), transparent 60%);
+    }
 
-        /* Achievement Card Styles */
-        .achievement-card {
-            background-color: #1a1a1a;
-            border-radius: 15px;
-            color: white;
-            padding: 20px;
-            text-align: center;
-            margin: 10px;
-            transition: transform 0.3s, box-shadow 0.3s;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: fadeInUp 0.5s forwards;
-        }
+    .story-text h2 { font-size: 2rem; color: #fff; margin-bottom: 18px; line-height: 1.3; }
+    .story-text h2 em { color: #d4af37; font-style: italic; }
+    .story-text p { color: #999; font-size: .95rem; line-height: 1.85; margin-bottom: 14px; }
+    .story-text .quote {
+        border-left: 3px solid #d4af37;
+        padding: 10px 18px;
+        margin: 24px 0;
+        color: #ccc;
+        font-style: italic;
+        font-size: 1.05rem;
+    }
 
-        .achievement-card img {
-            width: 50px;
-            height: 50px;
-        }
+    /* ── Section Title ── */
+    .section-title { text-align: center; padding: 60px 0 40px; }
+    .section-title h2 { font-size: 2rem; color: #fff; margin-bottom: 0; }
 
-        .achievement-card:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-        }
+    /* ── Achievements ── */
+    .achievement-card {
+        background: linear-gradient(145deg, #232323, #1e1e1e);
+        border: 1px solid rgba(212,175,55,.2);
+        border-radius: 16px;
+        padding: 36px 24px;
+        text-align: center;
+        transition: border-color .25s, transform .2s;
+        height: 100%;
+    }
+    .achievement-card:hover {
+        border-color: rgba(212,175,55,.6);
+        transform: translateY(-4px);
+    }
+    .achievement-card .icon {
+        width: 56px; height: 56px;
+        border-radius: 50%;
+        background: rgba(212,175,55,.1);
+        border: 1px solid rgba(212,175,55,.3);
+        display: flex; align-items: center; justify-content: center;
+        margin: 0 auto 18px;
+    }
+    .achievement-card .icon i { color: #d4af37; font-size: 1.3rem; }
+    .achievement-card h5 { color: #fff; font-size: 1rem; margin-bottom: 6px; }
+    .achievement-card p  { color: #777; font-size: .82rem; margin: 0; letter-spacing: .04em; }
 
-        /* Chef Flip Card Styles */
-        .flip-card {
-            background-color: transparent;
-            width: 200px; /* Fixed width */
-            height: 300px; /* Fixed height */
-            perspective: 1000px; /* Adds depth to the flip effect */
-            margin: 15px; /* Gap between cards */
-        }
+    /* ── Chef Flip Cards ── */
+    .flip-card {
+        perspective: 1000px;
+        height: 280px;
+    }
+    .flip-card-inner {
+        position: relative; width: 100%; height: 100%;
+        transition: transform .6s;
+        transform-style: preserve-3d;
+    }
+    .flip-card:hover .flip-card-inner { transform: rotateY(180deg); }
 
-        .flip-card-inner {
-            position: relative;
-            width: 80%;
-            height: 80%;
-            transition: transform 0.6s;
-            transform-style: preserve-3d;
-        }
+    .flip-card-front, .flip-card-back {
+        position: absolute; inset: 0;
+        backface-visibility: hidden;
+        border-radius: 14px;
+        overflow: hidden;
+        border: 1px solid rgba(212,175,55,.2);
+    }
+    .flip-card-front img { width: 100%; height: 100%; object-fit: cover; }
+    .flip-card-back {
+        background: linear-gradient(145deg, #232323, #1c1c1c);
+        transform: rotateY(180deg);
+        display: flex; align-items: center; justify-content: center;
+        text-align: center; padding: 24px;
+        border-color: rgba(212,175,55,.5);
+    }
+    .flip-card-back h5 { color: #d4af37; font-size: 1.1rem; margin-bottom: 8px; }
+    .flip-card-back p  { color: #bbb; font-size: .85rem; margin: 0; line-height: 1.5; }
+    .flip-card-back .role { font-size: .75rem; color: #666; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 10px; display: block; }
 
-        .flip-card:hover .flip-card-inner {
-            transform: rotateY(180deg); /* Rotate around Y-axis */
-        }
+    /* ── Stats ── */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+    .stat-box {
+        background: linear-gradient(145deg, #232323, #1e1e1e);
+        border: 1px solid rgba(212,175,55,.15);
+        border-radius: 12px;
+        padding: 20px 16px;
+        text-align: center;
+        transition: border-color .25s;
+    }
+    .stat-box:hover { border-color: rgba(212,175,55,.4); }
+    .stat-box .count { font-size: 2.2rem; font-weight: 700; color: #d4af37; display: block; margin-bottom: 4px; }
+    .stat-box p { color: #777; font-size: .8rem; margin: 0; line-height: 1.4; }
 
-        .flip-card-front,
-        .flip-card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            border-radius: 15px;
-            overflow: hidden;
-        }
+    /* ── Team section layout ── */
+    .team-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 48px;
+        align-items: center;
+    }
+    @media (max-width: 767px) { .team-grid { grid-template-columns: 1fr; } }
 
-        .flip-card-front {
-            background-color: #1a1a1a;
-            color: white;
-        }
+    .team-text h2 { font-size: 2rem; color: #fff; margin-bottom: 12px; }
+    .team-text h2 em { color: #d4af37; font-style: italic; }
+    .team-text > p { color: #888; font-size: .95rem; margin-bottom: 28px; line-height: 1.7; }
+</style>
 
-        .flip-card-back {
-            background-color: #333; /* Different color for the back */
-            color: #d4af37; /* Gold color for text on the back */
-            transform: rotateY(180deg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 20px;
-        }
-
-        .chef-image {
-            width: 100%;
-            height: 100%;
-            gap: 10px;
-            object-fit: cover;
-            border-radius: 15px; /* Rounded corners */
-        }
-
-        /* Story Image Styling */
-        .story img {
-            width: 80%;
-            height: auto;
-            margin: 0 auto;
-            display: block;
-        }
-
-        /* Chef Section H2 Color */
-        .chef-section h2 {
-            color: #d4af37; /* Change h2 color to gold */
-        }
-
-        /* Change the color of the count numbers */
-        .count {
-            color: #d4af37; /* Gold color for the count numbers */
-        }
-
-        /* Keyframes for FadeIn */
-        @keyframes fadeInUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Responsive styles */
-        @media (max-width: 768px) {
-            .achievement-card {
-                width: 80%;
-                margin: 5px auto;
-            }
-        }
-    </style>
-</head>
-
-<!-- Story Section -->
-<div class="container my-5 text-center">
+{{-- ── Page Header ── --}}
+<div class="page-header" data-aos="fade-down">
+    <p class="eyebrow">Baratie Resto</p>
     <h1>About Us</h1>
-    <p class="lead text-justify" style="font-size: 1.5rem;">
-        Welcome to Baratie Resto, a place where culinary taste and warm atmosphere combine into one. Founded with a passion for serving high quality food that combines rich traditional flavors and modern innovation, 
-        Baratie Resto is the main destination for culinary lovers who want an unforgettable dining experience.
-    </p>
-    <p class="lead text-justify" style="font-size: 1.5rem;">
-    At Baratie Resto, we believe that every dish has a story. Therefore, we are proud to serve a variety of dishes inspired from local culture to international flavors, all prepared with the freshest ingredients and the best cooking techniques.
-    </p>
-</div>
-
-<div class="story">
-    <img src="{{ asset('public/images/head(1).jpg') }}">
-</div>
-
-<!-- Achievements Section -->
-<div class="container my-5 text-center">
-    <h1>Achievements</h1>
-    <div class="row justify-content-center">
-        @foreach ([ 
-            ['image' => 'star.png', 'title' => 'Michelin Star 2023'],
-            ['image' => 'star.png', 'title' => 'Best Dessert 2022'],
-            ['image' => 'star.png', 'title' => 'James Beard Awards 2023']
-        ] as $achievement)
-            <div class="col-4 d-flex justify-content-center mb-4">
-                <div class="achievement-card">
-                    <img src="{{ asset('public/images/' . $achievement['image']) }}" alt="Achievement">
-                    <h2 style="font-size: 1.2rem;">{{ $achievement['title'] }}</h2>
-                </div>
-            </div>
-        @endforeach
+    <p class="lead">A culinary haven where tradition meets innovation — every dish tells a story.</p>
+    <div class="gold-divider">
+        <span></span><i class="fa fa-heart"></i><span></span>
     </div>
 </div>
 
-<!-- Executive Chef Section -->
-<div class="container my-5">
-    <div class="row">
-        <!-- Left side: Chef images -->
-        <div class="col-md-6 d-flex flex-column align-items-center">
-            <div class="row">
+<div class="container pb-5">
+
+    {{-- ── Story Section ── --}}
+    <div class="story-grid">
+        <div class="story-img-wrap" data-aos="fade-right">
+            <img src="{{ asset('public/images/head(1).jpg') }}" alt="Baratie Resto">
+        </div>
+        <div class="story-text" data-aos="fade-left">
+            <p class="eyebrow">Our Story</p>
+            <h2>Where <em>Passion</em> Meets the Plate</h2>
+            <p>Welcome to Baratie Resto — a place where culinary taste and warm atmosphere combine into one. Founded with a passion for serving high-quality food that blends rich traditional flavors with modern innovation.</p>
+            <blockquote class="quote">
+                Every dish has a story. We are proud to serve flavors inspired by local culture and international cuisine, prepared with the freshest ingredients.
+            </blockquote>
+            <p>Our warm ambiance, coupled with exceptional service, ensures every meal is a special occasion. Join us and enjoy the perfect dining experience.</p>
+        </div>
+    </div>
+
+    {{-- ── Achievements ── --}}
+    <div class="section-title" data-aos="fade-up">
+        <p class="eyebrow">Recognition</p>
+        <h2>Our Achievements</h2>
+        <div class="gold-divider"><span></span><i class="fa fa-trophy"></i><span></span></div>
+    </div>
+
+    <div class="row g-4 mb-5">
+        @foreach([
+            ['fa-star',   'Michelin Star',       '2023 — International recognition for culinary excellence'],
+            ['fa-trophy', 'Best Dessert Award',  '2022 — Voted by the National Culinary Association'],
+            ['fa-leaf',   'James Beard Award',   '2023 — Outstanding contribution to culinary arts'],
+        ] as [$icon, $title, $desc])
+        <div class="col-md-4" data-aos="zoom-in" data-aos-delay="{{ $loop->index * 120 }}">
+            <div class="achievement-card">
+                <div class="icon"><i class="fa {{ $icon }}"></i></div>
+                <h5>{{ $title }}</h5>
+                <p>{{ $desc }}</p>
+            </div>
+        </div>
+        @endforeach
+    </div>
+
+    {{-- ── Team Section ── --}}
+    <div class="section-title" data-aos="fade-up">
+        <p class="eyebrow">The People</p>
+        <h2>Meet The Team</h2>
+        <div class="gold-divider"><span></span><i class="fa fa-users"></i><span></span></div>
+    </div>
+
+    <div class="team-grid mb-5">
+        {{-- Chef Cards --}}
+        <div data-aos="fade-right">
+            <div class="row g-3">
                 @foreach([
-                    ['image' => 'person1.jpeg', 'name' => 'Ateng', 'achievement' => 'Best Chef Award 2023'],
-                    ['image' => 'person2.jpeg', 'name' => 'Cece', 'achievement' => 'Culinary Innovator 2022'],
-                    ['image' => 'person3.jpeg', 'name' => 'Jembung', 'achievement' => 'Sustainable Cooking Award 2023']
-                ] as $chef)
-                    <div class="col-4 mb-4">
-                        <div class="flip-card">
-                            <div class="flip-card-inner">
-                                <div class="flip-card-front">
-                                    <img src="{{ asset('public/images/' . $chef['image']) }}" class="chef-image" alt="{{ $chef['name'] }}">
-                                </div>
-                                <div class="flip-card-back">
-                                    <div>
-                                        <h2>{{ $chef['name'] }}</h2>
-                                        <p>{{ $chef['achievement'] }}</p>
-                                    </div>
+                    ['person1.jpeg', 'Ateng',    'Executive Chef',   'Best Chef Award 2023'],
+                    ['person2.jpeg', 'Cece',     'Pastry Chef',      'Culinary Innovator 2022'],
+                    ['person3.jpeg', 'Jembung',  'Sous Chef',        'Sustainable Cooking Award 2023'],
+                ] as [$img, $name, $role, $award])
+                <div class="col-4">
+                    <div class="flip-card">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <img src="{{ asset('public/images/' . $img) }}" alt="{{ $name }}">
+                            </div>
+                            <div class="flip-card-back">
+                                <div>
+                                    <span class="role">{{ $role }}</span>
+                                    <h5>{{ $name }}</h5>
+                                    <p>{{ $award }}</p>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
+                @endforeach
+            </div>
+            <p class="text-center mt-3" style="color:#555;font-size:.78rem;letter-spacing:.08em;">Hover to reveal</p>
+        </div>
+
+        {{-- Stats --}}
+        <div data-aos="fade-left">
+            <div class="team-text">
+                <p class="eyebrow">By the Numbers</p>
+                <h2><em>Excellence</em> in Every Detail</h2>
+                <p>Our team brings decades of combined experience to every plate, driven by an unwavering commitment to quality and creativity.</p>
+            </div>
+            <div class="stats-grid">
+                @foreach([
+                    ['25',  'years of combined culinary expertise'],
+                    ['500', 'unique dishes created annually'],
+                    ['32',  'specialty dishes on our menu'],
+                    ['87',  'awards from culinary competitions'],
+                ] as [$num, $label])
+                <div class="stat-box">
+                    <span class="count" data-target="{{ $num }}">0</span>
+                    <p>{{ $label }}</p>
+                </div>
                 @endforeach
             </div>
         </div>
-
-        <!-- Right side: Chef details -->
-        <div class="col-md-6 chef-section">
-            <h1 class="mb-4">The Team.</h1>
-            <p class="lead mb-4">Meet our talented chefs who craft unforgettable culinary experiences.</p>
-            <div class="row text-center">
-                <div class="col-6 mb-4">
-                    <h2 class="count" data-count="25">0</h2>
-                    <p>years of combined culinary expertise</p>
-                </div>
-                <div class="col-6 mb-4">
-                    <h2 class="count" data-count="500">0</h2>
-                    <p>unique dishes created annually</p>
-                </div>
-                <div class="col-6 mb-4">
-                    <h2 class="count" data-count="32">0</h2>
-                    <p>specialty dishes on our menu</p>
-                </div>
-                <div class="col-6 mb-4">
-                    <h2 class="count" data-count="87">0</h2>
-                    <p>awards from culinary competitions</p>
-                </div>
-            </div>
-        </div>
     </div>
+
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.1/dist/aos.js"></script>
 <script>
-    // Animation for counting up numbers
-    const counters = document.querySelectorAll('.count');
-    const speed = 100; // Adjust this value to change the speed
+    AOS.init({ duration: 650, once: true });
 
-    counters.forEach(counter => {
-        const updateCount = () => {
-            const target = +counter.getAttribute('data-count');
-            const count = +counter.innerText;
-
-            const increment = target / speed;
-
-            if (count < target) {
-                counter.innerText = Math.ceil(count + increment);
-                setTimeout(updateCount, 30);
-            } else {
-                counter.innerText = target;
-            }
-        };
-
-        // Trigger the counter animation when the element comes into view
-        const observer = new IntersectionObserver(entries => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    updateCount();
-                    observer.unobserve(entry.target);
-                }
-            });
+    // Count-up animation — triggered saat elemen masuk viewport
+    const counters = document.querySelectorAll('.count[data-target]');
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            observer.unobserve(entry.target);
+            const target = +entry.target.dataset.target;
+            const step   = Math.ceil(target / 60);
+            let current  = 0;
+            const tick = () => {
+                current = Math.min(current + step, target);
+                entry.target.textContent = current;
+                if (current < target) requestAnimationFrame(tick);
+            };
+            tick();
         });
+    }, { threshold: .3 });
 
-        observer.observe(counter);
-    });
+    counters.forEach(el => observer.observe(el));
 </script>
 
 @endsection

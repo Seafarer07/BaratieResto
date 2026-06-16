@@ -1,159 +1,80 @@
 @extends('admin.sidebar')
-
+@section('title', 'Meja')
+@section('page-title', 'Manage <span>Tables</span>')
 @section('content')
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Meja - Baratie Resto</title>
-
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=Playfair+Display:400,600&display=swap" rel="stylesheet" />
-
-    <!-- AOS Animation Library -->
-    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.1/dist/aos.js"></script>
-</head>
-
-<style>
-    body {
-        background-color: #1a1a1a;
-        font-family: 'Playfair Display', serif;
-        color: #eaeaea;
-        margin: 0;
-        padding: 0;
-    }
-
-    h1, h3 {
-        color: #d4af37;
-    }
-
-    table {
-        background-color: #2a2a2a;
-        color: #eaeaea;
-        border-radius: 10px;
-        overflow: hidden;
-    }
-
-    thead {
-        background-color: #d4af37;
-        color: #1a1a1a;
-    }
-
-    th, td {
-        text-align: center;
-        vertical-align: middle;
-    }
-
-    .btn-outline-light {
-        border-color: #d4af37;
-        color: #d4af37;
-        transition: all 0.3s ease;
-    }
-
-    .btn-outline-light:hover {
-        background-color: #d4af37;
-        color: #1a1a1a;
-    }
-
-    .btn-light {
-        background-color: #d4af37;
-        color: whitesmoke;
-        transition: all 0.3s ease;
-    }
-
-    .btn-light:hover {
-        border-color: #d4af37;
-        background-color: whitesmoke;
-        color: #1a1a1a;
-    }
-
-    .pagination .page-link {
-        color: #d4af37;
-        background-color: #2a2a2a;
-        border: 1px solid #d4af37;
-        margin: 0 5px;
-        border-radius: 8px;
-        padding: 8px 16px;
-        font-weight: bold;
-    }
-
-    .pagination .page-link:hover {
-        background-color: #d4af37;
-        color: #1a1a1a;
-        border-color: #d4af37;
-    }
-
-    .pagination .active .page-link {
-        background-color: #d4af37;
-        color: #1a1a1a;
-        border-color: #d4af37;
-    }
-
-    .pagination-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-top: 20px;
-    }
-</style>
-
-<div class="container text-left my-5" data-aos="fade-up">
-    <h4 class="ml-3">Selamat datang Admin</h4>
-    <h1 class="ml-3 mb-2">Kelola Meja</h1>
-
-    <div class="text-start mb-3 ml-3">
-        <a href="{{ route('meja.create') }}" class="btn btn-outline-light">Tambah Meja</a>
+<div class="page-heading">
+    <div>
+        <h2>Tables (Meja)</h2>
+        <div class="breadcrumb-bar">Admin / Tables</div>
     </div>
+    <a href="{{ route('meja.create') }}" class="btn-gold">
+        <i class="fa-solid fa-plus"></i> Add Table
+    </a>
+</div>
 
-    <!-- Meja Table -->
-    <div class="table-responsive" data-aos="fade-up">
-        <table class="table table-hover">
+<div class="a-card">
+    <div class="a-card-header">
+        <h5>All Tables</h5>
+        <span style="color:#666;font-size:.78rem;">{{ $meja->total() }} tables</span>
+    </div>
+    <div style="overflow-x:auto;">
+        <table class="a-table">
             <thead>
                 <tr>
-                    <th>Nomor Meja</th>
-                    <th>Jenis</th>
+                    <th>#</th>
+                    <th>Table Type</th>
+                    <th>Capacity</th>
                     <th>Status</th>
-                    <th>Aksi</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                @forelse ($meja as $item)
+                @forelse($meja as $item)
                 <tr>
-                    <td>{{ $item['id'] }}</td>
-                    <td>{{ $item['jenis'] }}</td>
-                    <td>{{ $item['status'] }}</td>
+                    <td style="color:#666;">{{ $item->id }}</td>
+                    <td style="font-weight:600;color:#eaeaea;">{{ $item->jenis }}</td>
+                    <td style="color:#aaa;">
+                        @if($item->jenis === 'Reguler') 2 seats
+                        @elseif($item->jenis === 'VIP') 4 seats
+                        @else 8 seats
+                        @endif
+                    </td>
                     <td>
-                        <form onsubmit="return confirm('Apakah Anda Yakin ?');" action="{{ route('meja.destroy', $item->id) }}" method="POST">
-                            <a href="{{ route('meja.edit', $item->id) }}" class="btn btn-outline-light btn-sm">Edit</a>
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-light btn-sm">Hapus</button>
-                        </form>
+                        @if($item->status === 'Available')
+                            <span class="badge-success">Available</span>
+                        @else
+                            <span class="badge-danger">Booked</span>
+                        @endif
+                    </td>
+                    <td>
+                        <div style="display:flex;gap:8px;align-items:center;">
+                            <a href="{{ route('meja.edit', $item->id) }}" class="btn-outline-gold">
+                                <i class="fa-solid fa-pen"></i> Edit
+                            </a>
+                            <form action="{{ route('meja.destroy', $item->id) }}" method="POST"
+                                  onsubmit="return confirm('Delete this table?')" style="margin:0">
+                                @csrf @method('DELETE')
+                                <button type="submit" class="btn-danger-sm">
+                                    <i class="fa-solid fa-trash"></i> Delete
+                                </button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="4" class="text-center">Data Meja belum tersedia</td>
+                    <td colspan="5" style="text-align:center;color:#555;padding:32px;">No tables yet</td>
                 </tr>
                 @endforelse
             </tbody>
         </table>
-        <div class="pagination-container">
-            {{ $meja->links('pagination::bootstrap-5') }}
-        </div>
     </div>
+    @if($meja->hasPages())
+    <div style="padding:16px 22px;border-top:1px solid var(--border);">
+        {{ $meja->links('pagination::bootstrap-5') }}
+    </div>
+    @endif
 </div>
-
-<script>
-    AOS.init();
-</script>
 
 @endsection
